@@ -1,7 +1,7 @@
 from .activation import Activation
 import numpy as np
 
-class Relu(Activation):
+class ReLU(Activation):
     """TODO: Relu docs"""
 
     def __init__(self):
