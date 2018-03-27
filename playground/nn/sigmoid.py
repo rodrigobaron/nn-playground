@@ -11,4 +11,4 @@ class Sigmoid(Activation):
         return 1 / (1 + np.exp(-inputs))
 
     def f_prime(self, inputs):
-        self.f(inputs) * (1 - self.f(inputs))
+        return self.f(inputs) * (1 - self.f(inputs))
