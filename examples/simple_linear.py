@@ -25,7 +25,7 @@ img_size_flat = img_size * img_size
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-data = input_data.read_data_sets("data/MNIST/", one_hot=True)
+data = input_data.read_data_sets("data/MNIST/", one_hot=False)
 
 
 

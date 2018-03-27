@@ -10,10 +10,11 @@ class CrossEntropy(Loss):
 
     def loss(self, predicted, truth):
         m = predicted.shape[0]
-        p = self.softmax(predicted)
-        llik = -np.log(p[range(m), np.argmax(truth)])
 
-        _loss = np.sum(llik) / m
+        prob = self.softmax(predicted)
+        llike = -np.log(prob[range(m), truth])
+
+        _loss = np.sum(llike) / m
 
         if self.regularization is None:
             return _loss
@@ -22,8 +23,7 @@ class CrossEntropy(Loss):
 
     def grad(self, predicted, truth):
         m = predicted.shape[0]
-        grad_y = self.softmax(predicted)
-        grad_y[range(m), np.argmax(truth)] -= 1.
-        grad_y /= m
+        prob = self.softmax(predicted)
+        prob[range(m), truth] -= 1.
 
-        return grad_y
+        return prob / m
