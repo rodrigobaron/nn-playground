@@ -3,7 +3,7 @@ sys.path.append(sys.path[0] + "/..")
 
 import numpy as np
 
-from playground.nn import Model, CrossEntropy
+from playground.nn import Model, CrossEntropyLoss
 from playground.nn import Linear
 from playground.utils import BatchIterator
 from playground.optim import SGD
@@ -52,7 +52,7 @@ model = Model([
 
 iterator = BatchIterator(batch_size=100, shuffle=True)
 regularization = L2Regularization(model)
-loss = CrossEntropy()
+loss = CrossEntropyLoss()
 
 optimizer = SGD(lr=0.01)
 epochs = 100

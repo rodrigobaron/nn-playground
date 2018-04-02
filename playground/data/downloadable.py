@@ -1,6 +1,6 @@
 import os
 import os.path as P
-import urllib
+import urllib.request
 import numpy as np
 class Downloadable:
     def __init__(self, url):
@@ -8,7 +8,7 @@ class Downloadable:
 
     def try_download(self, filename, work_directory, silent=False):
         if not P.exists(work_directory):
-            os.mkdir(work_directory)
+            os.makedirs(work_directory)
         filepath = P.join(work_directory, filename)
         if not os.path.exists(filepath):
             filepath, _ = urllib.request.urlretrieve(self.url + filename, filepath)

@@ -2,8 +2,8 @@ import numpy as np
 from .loss import Loss
 from ..utils.softmax import Softmax
 
-class BinaryCrossEntropy(Loss):
-    """TODO: BinaryCrossEntropy docs"""
+class BinaryCrossEntropyLoss(Loss):
+    """TODO: BinaryCrossEntropyLoss docs"""
     def __init__(self, regularization=None):
         self.regularization = regularization
         self.softmax = Softmax()
