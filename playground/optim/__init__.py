@@ -1,3 +1,4 @@
 from .sgd import SGD
+from .sgd_momentum import SGDMomentum
 
-__all__ = ['SGD']
+__all__ = ['SGD', 'SGDMomentum']
