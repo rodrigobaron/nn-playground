@@ -7,7 +7,9 @@ from .leaky_relu import LeakyReLU
 from .sigmoid import Sigmoid
 from .cross_entropy import CrossEntropy
 from .binary_cross_entropy import BinaryCrossEntropy
+from .dropout import Dropout
 
 
 __all__ = ['Tanh', 'MSELoss', 'Linear', 'Model',
-           'ReLU', 'LeakyReLU', 'Sigmoid', 'CrossEntropy']
+           'ReLU', 'LeakyReLU', 'Sigmoid', 'CrossEntropy',
+           'Dropout']
