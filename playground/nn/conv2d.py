@@ -6,42 +6,54 @@ class Conv2d(Layer):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0):
         super().__init__()
 
-        self.params['w'] = np.random.randn(in_channels, out_channels)
-        self.params['b'] = np.random.randn(out_channels)
-        self.kernel_size = kernel_size
+        if type(kernel_size) is int:
+            kernel_size_h = kernel_size
+            kernel_size_w = kernel_size
+        elif type(kernel_size) is tuple and len(kernel_size) == 2:
+            kernel_size_h = kernel_size[0]
+            kernel_size_w = kernel_size[1]
+        else:
+            raise Exception("`kernel_size` should be a int or a tuple of lenght 2")
+
+        self.params['w'] = np.random.randn(out_channels, in_channels, kernel_size_h, kernel_size_w)
+        self.params['b'] = np.random.randn(out_channels, in_channels)
+
         self.stride = stride
         self.padding = padding
 
     def forward(self, inputs):
-        # self.inputs = inputs
+        self.inputs = inputs
         n_filters, d_filter, h_filter, w_filter = self.params['w'].shape
         n_x, d_x, h_x, w_x = inputs.shape
         h_out = (h_x - h_filter + 2 * self.padding) / self.stride + 1
         w_out = (w_x - w_filter + 2 * self.padding) / self.stride + 1
 
         h_out, w_out = int(h_out), int(w_out)
-        self.inputs = self.im2col_indices(inputs, h_filter, w_filter, padding=self.padding, stride=self.stride)
-        self.params['w'] = self.params['w'].reshape(n_filters, -1)
 
-        return self.inputs @ self.params['w'] + self.params['b']
-        # return inputs @ self.params['w'] + self.params['b']
+        X_col = self.im2col_indices(inputs, h_filter, w_filter, padding=self.padding, stride=self.stride)
+        W_col = self.params['w'].reshape(n_filters, -1)
+
+        out = W_col @ X_col + self.params['b']
+        out = out.reshape(n_filters, h_out, w_out, n_x)
+        out = out.transpose(3, 0, 1, 2)
+
+        self.X_col = X_col
+
+        return out
 
     def backward(self, grad):
-        n_filter, d_filter, h_filter, w_filter = W.shape
+        n_filter, d_filter, h_filter, w_filter = self.params['w'].shape
 
-        self.grads['b'] = np.sum(grad, axis=0)
-        self.grads['b'] = self.grads['b'].reshape(n_filter, -1)
+        db = np.sum(grad, axis=(0, 2, 3))
+        self.grads['b'] = db.reshape(n_filter, -1)
 
-        grad_reshaped = grad.transpose(1, 2, 3, 0).reshape(n_filter, -1)
-        self.grads['w'] = grad_reshaped @ self.inputs.T
-        self.grads['w'] = self.grads['w'].reshape(self.params['w'].shape)
+        dout_reshaped = grad.transpose(1, 2, 3, 0).reshape(n_filter, -1)
+        dW = dout_reshaped @ self.X_col.T
+        self.grads['w'] = dW.reshape(self.params['w'].shape)
 
         W_reshape = self.params['w'].reshape(n_filter, -1)
-        dX_col = W_reshape.T @ grad_reshaped
+        dX_col = W_reshape.T @ dout_reshaped
         return self.col2im_indices(dX_col, self.inputs.shape, h_filter, w_filter, padding=self.padding, stride=self.stride)
-
-        # self.grads['w'] = self.inputs.T @ grad
-        # return grad @ self.params['w'].T
 
 
     def get_im2col_indices(self, x_shape, field_height, field_width, padding=1, stride=1):

@@ -4,9 +4,9 @@ sys.path.append(sys.path[0] + "/..")
 import numpy as np
 
 from playground.nn import Model, CrossEntropyLoss
-from playground.nn import Linear, Conv2d
+from playground.nn import Linear, Conv2d, Reshape, ReLU
 from playground.utils import BatchIterator
-from playground.optim import SGD
+from playground.optim import SGD, Adam
 from playground.reg import L2Regularization
 from playground.data import MNISTData
 
@@ -52,15 +52,18 @@ print('shape y_train', y_test.shape)
 print('---' * 10)
 
 model = Model([
-    Conv2d(10, 32, 5)
+    Conv2d(1, 10, 3),
+    ReLU(),
+    Reshape(10 * 26 * 26),
+    Linear(input_size=10 * 26 * 26, output_size=num_classes)
     # Linear(input_size=img_size_flat, output_size=num_classes)
 ])
 
 iterator = BatchIterator(batch_size=100, shuffle=True)
-regularization = L2Regularization(model)
+# regularization = L2Regularization(model)
 loss = CrossEntropyLoss()
 
-optimizer = SGD(lr=0.01)
+optimizer = Adam(lr=0.01)
 epochs = 100
 
 for i, epoch in enumerate(range(epochs)):
@@ -84,7 +87,7 @@ for i, epoch in enumerate(range(epochs)):
 corrects = 0
 count = 0
 for x, y in zip(x_test, y_test):
-    predicted = np.argmax(model(x))
+    predicted = np.argmax(model(np.array([x])))
     if predicted == y:
         status = "OK"
         corrects += 1

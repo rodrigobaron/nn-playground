@@ -9,8 +9,9 @@ from .cross_entropy_loss import CrossEntropyLoss
 from .binary_cross_entropy_loss import BinaryCrossEntropyLoss
 from .dropout import Dropout
 from .conv2d import Conv2d
+from .reshape import Reshape
 
 
 __all__ = ['Tanh', 'MSELoss', 'Linear', 'Model',
            'ReLU', 'LeakyReLU', 'Sigmoid', 'CrossEntropyLoss',
-           'BinaryCrossEntropyLoss', 'Dropout', 'Conv2d']
+           'BinaryCrossEntropyLoss', 'Dropout', 'Conv2d', 'Reshape']
