@@ -4,7 +4,7 @@ sys.path.append(sys.path[0] + "/..")
 import numpy as np
 
 from playground.nn import Model, CrossEntropyLoss
-from playground.nn import Linear
+from playground.nn import Linear, Conv2d
 from playground.utils import BatchIterator
 from playground.optim import SGD
 from playground.reg import L2Regularization
@@ -25,8 +25,13 @@ img_size_flat = img_size * img_size
 data_loader = MNISTData()
 (x_train, y_train), (x_test, y_test) = data_loader.load('data/MNIST')
 
-x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] * x_train.shape[2])
-x_test = x_test.reshape(x_test.shape[0], x_test.shape[1] * x_test.shape[2])
+# x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] * x_train.shape[2])
+# x_test = x_test.reshape(x_test.shape[0], x_test.shape[1] * x_test.shape[2])
+
+img_shape = (1, 28, 28)
+x_train = x_train.reshape(-1, *img_shape)
+# X_val = X_val.reshape(-1, *img_shape)
+x_test = x_test.reshape(-1, *img_shape)
 
 x_train, x_test = pre_process_images(x_train), pre_process_images(x_test)
 
@@ -47,7 +52,8 @@ print('shape y_train', y_test.shape)
 print('---' * 10)
 
 model = Model([
-    Linear(input_size=img_size_flat, output_size=num_classes)
+    Conv2d(10, 32, 5)
+    # Linear(input_size=img_size_flat, output_size=num_classes)
 ])
 
 iterator = BatchIterator(batch_size=100, shuffle=True)
