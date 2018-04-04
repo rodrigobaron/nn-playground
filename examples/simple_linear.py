@@ -4,9 +4,9 @@ sys.path.append(sys.path[0] + "/..")
 import numpy as np
 
 from playground.nn import Model, CrossEntropyLoss
-from playground.nn import Linear, Conv2d, Reshape, ReLU
+from playground.nn import Linear
 from playground.utils import BatchIterator
-from playground.optim import SGD, Adam
+from playground.optim import SGD
 from playground.reg import L2Regularization
 from playground.data import MNISTData
 
@@ -25,13 +25,8 @@ img_size_flat = img_size * img_size
 data_loader = MNISTData()
 (x_train, y_train), (x_test, y_test) = data_loader.load('data/MNIST')
 
-# x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] * x_train.shape[2])
-# x_test = x_test.reshape(x_test.shape[0], x_test.shape[1] * x_test.shape[2])
-
-img_shape = (1, 28, 28)
-x_train = x_train.reshape(-1, *img_shape)
-# X_val = X_val.reshape(-1, *img_shape)
-x_test = x_test.reshape(-1, *img_shape)
+x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] * x_train.shape[2])
+x_test = x_test.reshape(x_test.shape[0], x_test.shape[1] * x_test.shape[2])
 
 x_train, x_test = pre_process_images(x_train), pre_process_images(x_test)
 
@@ -44,26 +39,22 @@ print('---' * 10)
 print('shape x_train', x_train.shape)
 print('shape y_train', y_train.shape)
 print('---' * 10)
-print('shape x_train', x_val.shape)
-print('shape y_train', y_val.shape)
+print('shape x_val', x_val.shape)
+print('shape y_val', y_val.shape)
 print('---' * 10)
-print('shape x_train', x_test.shape)
-print('shape y_train', y_test.shape)
+print('shape x_test', x_test.shape)
+print('shape y_test', y_test.shape)
 print('---' * 10)
 
 model = Model([
-    Conv2d(1, 10, 3),
-    ReLU(),
-    Reshape(10 * 26 * 26),
-    Linear(input_size=10 * 26 * 26, output_size=num_classes)
-    # Linear(input_size=img_size_flat, output_size=num_classes)
+    Linear(input_size=img_size_flat, output_size=num_classes)
 ])
 
 iterator = BatchIterator(batch_size=100, shuffle=True)
-# regularization = L2Regularization(model)
-loss = CrossEntropyLoss()
+regularization = L2Regularization(model)
+loss = CrossEntropyLoss(regularization=regularization)
 
-optimizer = Adam(lr=0.01)
+optimizer = SGD(lr=0.01)
 epochs = 100
 
 for i, epoch in enumerate(range(epochs)):
@@ -87,7 +78,7 @@ for i, epoch in enumerate(range(epochs)):
 corrects = 0
 count = 0
 for x, y in zip(x_test, y_test):
-    predicted = np.argmax(model(np.array([x])))
+    predicted = np.argmax(model(x))
     if predicted == y:
         status = "OK"
         corrects += 1
