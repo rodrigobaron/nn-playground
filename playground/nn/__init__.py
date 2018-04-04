@@ -10,8 +10,11 @@ from .binary_cross_entropy_loss import BinaryCrossEntropyLoss
 from .dropout import Dropout
 from .conv2d import Conv2d
 from .reshape import Reshape
+from .max_pool2d import MaxPool2d
+from .avg_pool2d import AvgPool2d
 
 
 __all__ = ['Tanh', 'MSELoss', 'Linear', 'Model',
            'ReLU', 'LeakyReLU', 'Sigmoid', 'CrossEntropyLoss',
-           'BinaryCrossEntropyLoss', 'Dropout', 'Conv2d', 'Reshape']
+           'BinaryCrossEntropyLoss', 'Dropout', 'Conv2d', 'Reshape',
+           'MaxPool2d', 'AvgPool2d']
