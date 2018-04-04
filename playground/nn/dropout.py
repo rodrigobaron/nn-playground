@@ -10,9 +10,7 @@ class Dropout(Layer):
 
     def forward(self, inputs):
         self.rb = np.random.binomial(1, self.p, size=inputs.shape) / self.p
-        print('forward', self.rb)
         return inputs * self.rb
 
     def backward(self, grad):
-        print('backward', grad * self.rb)
         return grad * self.rb
