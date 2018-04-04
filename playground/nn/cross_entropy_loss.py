@@ -12,7 +12,7 @@ class CrossEntropyLoss(Loss):
         m = predicted.shape[0]
 
         prob = self.softmax(predicted)
-        llike = -np.log(prob[range(m), truth])
+        llike = -np.log(prob[range(m), truth] + 1e-8)
 
         _loss = np.sum(llike) / m
 
