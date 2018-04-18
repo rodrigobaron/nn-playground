@@ -12,9 +12,10 @@ from .conv2d import Conv2d
 from .reshape import Reshape
 from .max_pool2d import MaxPool2d
 from .avg_pool2d import AvgPool2d
+from .rnn import RNN
 
 
 __all__ = ['Tanh', 'MSELoss', 'Linear', 'Model',
            'ReLU', 'LeakyReLU', 'Sigmoid', 'CrossEntropyLoss',
            'BinaryCrossEntropyLoss', 'Dropout', 'Conv2d', 'Reshape',
-           'MaxPool2d', 'AvgPool2d']
+           'MaxPool2d', 'AvgPool2d', 'RNN']
