@@ -4,7 +4,7 @@ This is a [python](https://www.python.org/) implementation of some popular NN on
 
 ## How to run?
 
-This is writen using [python 3.5+](https://www.python.org/downloads/), just make sure it is installed. The install [Numpy](https://github.com/numpy/numpy)  ...  
+This is writen using [python 3.5+](https://www.python.org/downloads/), just make sure it is installed. Then install [Numpy](https://github.com/numpy/numpy)  ...  
 
 ```
 pip install numpy
